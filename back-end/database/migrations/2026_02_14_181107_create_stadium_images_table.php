@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('stadium_images', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->enum('role', ['admin', 'player'])->default('player');
-            $table->string('password');
-            $table->rememberToken();
+            $table->foreignId('stadium_id')
+                ->constrained('stadiums')
+                ->onDelete('cascade');
+
+            $table->string('path'); // example: stadiums/img1.jpg
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('stadium_images');
     }
 };
