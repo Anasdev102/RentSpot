@@ -33,3 +33,16 @@
 # Local scratch files
 /frontend/test-write.txt
 *.bak
+
+# Private project context and design references
+/adminreplyfeaturefor.md
+/coding-rules.md
+/contact.md
+/dashboard-design.md
+/database.md
+/design.md
+/features.md
+/roles.md
+/allPages.png
+/dashboard.png
+/home.png
