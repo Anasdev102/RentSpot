@@ -1,0 +1,75 @@
+export const demoSports = [
+  { id: '11111111-1111-4111-8111-111111111111', name: 'Football', icon: 'football' },
+  { id: '22222222-2222-4222-8222-222222222222', name: 'Padel', icon: 'padel' },
+  { id: '33333333-3333-4333-8333-333333333333', name: 'Tennis', icon: 'tennis' },
+  { id: '44444444-4444-4444-8444-444444444444', name: 'Basketball', icon: 'basketball' },
+];
+
+export const demoStadiums = [
+  {
+    id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    sport_id: demoSports[0].id,
+    name: 'Arena Blue Field',
+    description: 'Clean, trusted sports field with lighting, easy access, and online reservation support.',
+    city: 'New York',
+    address: '12 Riverside Ave',
+    price_per_hour: '55.00',
+    capacity: 14,
+    is_active: true,
+    reviews_avg_rating: 4.8,
+    sport: demoSports[0],
+    images: [
+      {
+        id: 'aaaaaaa1-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        image_path: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=900&q=80',
+        is_main: true,
+      },
+    ],
+    reviews: [],
+    reservations: [],
+  },
+  {
+    id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+    sport_id: demoSports[1].id,
+    name: 'Green Court Club',
+    description: 'Premium padel court with smooth booking and secure online payment.',
+    city: 'Boston',
+    address: '44 Court Street',
+    price_per_hour: '40.00',
+    capacity: 4,
+    is_active: true,
+    reviews_avg_rating: 4.6,
+    sport: demoSports[1],
+    images: [
+      {
+        id: 'bbbbbbb2-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        image_path: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=900&q=80',
+        is_main: true,
+      },
+    ],
+    reviews: [],
+    reservations: [],
+  },
+  {
+    id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+    sport_id: demoSports[2].id,
+    name: 'Goldline Tennis Park',
+    description: 'Modern tennis court for quick hourly reservations.',
+    city: 'Chicago',
+    address: '88 Match Point Road',
+    price_per_hour: '35.00',
+    capacity: 2,
+    is_active: true,
+    reviews_avg_rating: 4.7,
+    sport: demoSports[2],
+    images: [
+      {
+        id: 'ccccccc3-cccc-4ccc-8ccc-cccccccccccc',
+        image_path: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=900&q=80',
+        is_main: true,
+      },
+    ],
+    reviews: [],
+    reservations: [],
+  },
+];

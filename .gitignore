@@ -1,0 +1,35 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+/backend/vendor/
+/frontend/node_modules/
+
+# Build output
+/frontend/dist/
+/backend/public/build/
+/backend/public/hot
+/backend/public/storage
+
+# Local databases and generated uploads
+/backend/database/*.sqlite
+/backend/storage/app/public/stadiums/
+
+# Runtime files
+*.log
+/backend/storage/logs/*.log
+/backend/storage/framework/cache/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/views/*
+
+# Tooling and editor files
+.phpunit.result.cache
+/.fleet/
+/.idea/
+/.vscode/
+
+# Local scratch files
+/frontend/test-write.txt
+*.bak
