@@ -2,6 +2,8 @@ import { Menu, UserRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../i18n/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 import UserNotifications from './UserNotifications';
 
 const linkClass = ({ isActive }) =>
@@ -41,6 +43,7 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const { t } = useLanguage();
   const dashboardPath = user?.role === 'admin' ? '/admin' : '/dashboard';
 
   const scrollToSection = (sectionId) => {
@@ -77,13 +80,14 @@ export default function Navbar() {
           <span><span className="text-primary">RENT</span><span className="text-secondary">SPOT</span></span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
-          <NavLink to="/" className={linkClass}>Home</NavLink>
-          <NavLink to="/stadiums" className={linkClass}>Stadiums</NavLink>
-          <button type="button" onClick={() => scrollToSection('how')} className={sectionLinkClass}>How It Works</button>
-          <button type="button" onClick={() => scrollToSection('about')} className={sectionLinkClass}>About Us</button>
-          <button type="button" onClick={() => scrollToSection('contact')} className={sectionLinkClass}>Contact</button>
+          <NavLink to="/" className={linkClass}>{t('nav.home')}</NavLink>
+          <NavLink to="/stadiums" className={linkClass}>{t('nav.stadiums')}</NavLink>
+          <button type="button" onClick={() => scrollToSection('how')} className={sectionLinkClass}>{t('nav.how')}</button>
+          <button type="button" onClick={() => scrollToSection('about')} className={sectionLinkClass}>{t('nav.about')}</button>
+          <button type="button" onClick={() => scrollToSection('contact')} className={sectionLinkClass}>{t('nav.contact')}</button>
         </nav>
         <div className="hidden items-center gap-3 md:flex">
+          <LanguageSwitcher />
           {user ? (
             <>
               <UserNotifications isAdmin={user.role === 'admin'} />
@@ -91,7 +95,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" className="rounded-md bg-primary px-3.5 py-1.5 text-[11px] font-bold text-white transition hover:bg-blue-700">Login</Link>
+              <Link to="/login" className="rounded-md bg-primary px-3.5 py-1.5 text-[11px] font-bold text-white transition hover:bg-blue-700">{t('nav.login')}</Link>
             </>
           )}
         </div>
@@ -102,12 +106,13 @@ export default function Navbar() {
       {open && (
         <div className="panel-pop border-t border-black/5 bg-white px-4 pb-4 md:hidden">
           <div className="grid gap-3">
-            <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-            <Link to="/stadiums" onClick={() => setOpen(false)}>Stadiums</Link>
-            <button type="button" onClick={() => scrollToSection('how')} className="text-left">How It Works</button>
-            <button type="button" onClick={() => scrollToSection('about')} className="text-left">About Us</button>
-            <button type="button" onClick={() => scrollToSection('contact')} className="text-left">Contact</button>
-            <Link to={user ? dashboardPath : '/login'} onClick={() => setOpen(false)}>{user ? 'Dashboard' : 'Login'}</Link>
+            <LanguageSwitcher />
+            <Link to="/" onClick={() => setOpen(false)}>{t('nav.home')}</Link>
+            <Link to="/stadiums" onClick={() => setOpen(false)}>{t('nav.stadiums')}</Link>
+            <button type="button" onClick={() => scrollToSection('how')} className="text-left">{t('nav.how')}</button>
+            <button type="button" onClick={() => scrollToSection('about')} className="text-left">{t('nav.about')}</button>
+            <button type="button" onClick={() => scrollToSection('contact')} className="text-left">{t('nav.contact')}</button>
+            <Link to={user ? dashboardPath : '/login'} onClick={() => setOpen(false)}>{user ? t('nav.dashboard') : t('nav.login')}</Link>
           </div>
         </div>
       )}

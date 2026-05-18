@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../api/axios';
-import { demoSports, demoStadiums } from '../../data/demoData';
 
 export const fetchSports = createAsyncThunk('stadiums/fetchSports', async () => {
   const { data } = await api.get('/sports');
@@ -25,9 +24,9 @@ export const fetchStadium = createAsyncThunk('stadiums/fetchStadium', async (id)
 const stadiumsSlice = createSlice({
   name: 'stadiums',
   initialState: {
-    sports: demoSports,
-    cities: [...new Set(demoStadiums.map((stadium) => stadium.city).filter(Boolean))],
-    list: demoStadiums,
+    sports: [],
+    cities: [],
+    list: [],
     pagination: null,
     selected: null,
     loading: false,
@@ -38,18 +37,20 @@ const stadiumsSlice = createSlice({
     builder
       .addCase(fetchSports.fulfilled, (state, action) => {
         const sports = action.payload?.data || action.payload;
-        state.sports = Array.isArray(sports) && sports.length > 0 ? sports : demoSports;
+        state.sports = Array.isArray(sports) ? sports : [];
       })
       .addCase(fetchCities.fulfilled, (state, action) => {
         const cities = action.payload?.data || action.payload;
-        state.cities = Array.isArray(cities) && cities.length > 0 ? cities : state.cities;
+        state.cities = Array.isArray(cities) ? cities : [];
       })
       .addCase(fetchStadiums.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchStadiums.fulfilled, (state, action) => {
         state.loading = false;
-        state.list = action.payload.data || action.payload;
+        state.error = null;
+        state.list = action.payload.data || action.payload || [];
         state.pagination = action.payload.meta || null;
       })
       .addCase(fetchStadium.pending, (state) => {
@@ -59,21 +60,17 @@ const stadiumsSlice = createSlice({
       })
       .addCase(fetchStadium.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.selected = action.payload;
       })
       .addCase(fetchStadium.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        state.selected = state.list.find((stadium) => String(stadium.id) === String(action.meta.arg))
-          || demoStadiums.find((stadium) => String(stadium.id) === String(action.meta.arg))
-          || null;
+        state.selected = state.list.find((stadium) => String(stadium.id) === String(action.meta.arg)) || null;
       })
       .addMatcher((action) => action.type.startsWith('stadiums/') && action.type.endsWith('/rejected'), (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        state.sports = state.sports.length ? state.sports : demoSports;
-        state.cities = state.cities.length ? state.cities : [...new Set(demoStadiums.map((stadium) => stadium.city).filter(Boolean))];
-        state.list = state.list.length ? state.list : demoStadiums;
       });
   },
 });

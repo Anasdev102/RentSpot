@@ -7,16 +7,15 @@ import Navbar from '../components/Navbar';
 import StadiumFilters from '../components/stadiums/StadiumFilters';
 import StadiumResults from '../components/stadiums/StadiumResults';
 import StadiumsHero from '../components/stadiums/StadiumsHero';
-import { demoSports } from '../data/demoData';
 import { fetchCities, fetchSports, fetchStadiums } from '../features/stadiums/stadiumsSlice';
 
 export default function Stadiums() {
   const dispatch = useDispatch();
   const [params] = useSearchParams();
-  const { sports, cities, list, loading } = useSelector((state) => state.stadiums);
+  const { sports, cities, list, loading, error } = useSelector((state) => state.stadiums);
   const { token } = useSelector((state) => state.auth);
   const [favoriteIds, setFavoriteIds] = useState([]);
-  const sportOptions = sports?.length ? sports : demoSports;
+  const sportOptions = sports || [];
   const cityOptions = cities?.length ? cities : [...new Set(list.map((stadium) => stadium.city).filter(Boolean))];
   const [filters, setFilters] = useState({
     sport_id: params.get('sport_id') || '',
@@ -73,6 +72,7 @@ export default function Stadiums() {
           <StadiumResults
             stadiums={list}
             loading={loading}
+            error={error}
             sort={filters.sort}
             favoriteIds={favoriteIds}
             onSortChange={(value) => updateFilters({ sort: value })}
