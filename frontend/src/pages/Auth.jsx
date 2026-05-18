@@ -9,18 +9,24 @@ export default function Auth({ mode }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const { error, loading } = useSelector((state) => state.auth);
+  const { error } = useSelector((state) => state.auth);
   const { t } = useLanguage();
   const googleError = params.get('google_error');
   const isRegister = mode === 'register';
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', password_confirmation: '' });
+  const [submitting, setSubmitting] = useState(false);
 
   const submit = async (event) => {
     event.preventDefault();
+    setSubmitting(true);
     const action = isRegister ? register(form) : login({ email: form.email, password: form.password });
-    const result = await dispatch(action);
-    if (result.meta.requestStatus === 'fulfilled') {
-      navigate(result.payload.user.role === 'admin' ? '/admin' : '/dashboard');
+    try {
+      const result = await dispatch(action);
+      if (result.meta.requestStatus === 'fulfilled') {
+        navigate(result.payload.user.role === 'admin' ? '/admin' : '/dashboard');
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -53,7 +59,7 @@ export default function Auth({ mode }) {
           {isRegister && <label className="text-xs font-semibold text-slate-600">{t('auth.confirmPassword')}<input className="input mt-2" placeholder={t('auth.confirmPassword')} type="password" value={form.password_confirmation} onChange={(e) => setForm({ ...form, password_confirmation: e.target.value })} required /></label>}
           {(error || googleError) && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error || googleError}</p>}
           {!isRegister && <div className="flex items-center justify-between text-xs text-muted"><label className="flex items-center gap-2"><input type="checkbox" /> {t('auth.rememberMe')}</label><span>{t('auth.forgotPassword')}</span></div>}
-          <button className="btn-primary" disabled={loading}>{loading ? t('auth.pleaseWait') : isRegister ? t('auth.register') : t('auth.login')}</button>
+          <button className="btn-primary" disabled={submitting}>{submitting ? t('auth.pleaseWait') : isRegister ? t('auth.register') : t('auth.login')}</button>
           <div className="relative py-1 text-center text-xs text-slate-400 before:absolute before:left-0 before:top-1/2 before:h-px before:w-[38%] before:bg-slate-200 after:absolute after:right-0 after:top-1/2 after:h-px after:w-[38%] after:bg-slate-200">{t('auth.continueWith')}</div>
           <button type="button" onClick={googleLogin} className="btn-outline"><span className="font-black text-red-500">G</span> {t('auth.google')}</button>
           <p className="text-center text-sm text-muted">

@@ -60,6 +60,8 @@ const authSlice = createSlice({
         localStorage.setItem('rentspot_user', JSON.stringify(action.payload.user));
       })
       .addCase(logout.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
         state.user = null;
         state.token = null;
         localStorage.removeItem('rentspot_token');
