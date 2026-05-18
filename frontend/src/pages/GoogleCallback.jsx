@@ -17,9 +17,13 @@ export default function GoogleCallback() {
       return;
     }
 
-    const user = JSON.parse(atob(userParam));
-    dispatch(setGoogleSession({ token, user }));
-    navigate(user.role === 'admin' ? '/admin' : '/dashboard');
+    try {
+      const user = JSON.parse(atob(userParam));
+      dispatch(setGoogleSession({ token, user }));
+      navigate(user.role === 'admin' ? '/admin' : '/dashboard');
+    } catch (error) {
+      navigate('/login?google_error=Google login response was invalid. Please try again.');
+    }
   }, [dispatch, navigate, params]);
 
   return (

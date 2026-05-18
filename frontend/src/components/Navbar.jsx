@@ -18,7 +18,7 @@ const smoothScrollTo = (sectionId) => {
   const start = window.scrollY;
   const targetPosition = target.getBoundingClientRect().top + start - headerOffset;
   const distance = targetPosition - start;
-  const duration = 850;
+  const duration = 1050;
   const startedAt = performance.now();
   const easeInOut = (progress) => (progress < 0.5 ? 4 * progress ** 3 : 1 - ((-2 * progress + 2) ** 3) / 2);
 
@@ -64,7 +64,7 @@ export default function Navbar() {
       setTimeout(() => {
         window.history.replaceState(null, '', `#${sectionId}`);
         smoothScrollTo(sectionId);
-      }, 180);
+      }, 320);
     }
   }, [location.pathname, location.hash, location.state]);
 

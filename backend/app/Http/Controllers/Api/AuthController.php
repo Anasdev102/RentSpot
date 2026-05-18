@@ -70,32 +70,36 @@ class AuthController extends Controller
 
     public function redirectToGoogle()
     {
-        
+        $frontendUrl = $this->frontendUrl();
+
         if (! config('services.google.client_id') || ! config('services.google.client_secret')) {
-            abort(422, 'Google login is not configured.');
+            return $this->redirectWithGoogleError($frontendUrl, 'Google login is not configured.');
         }
 
-        return Socialite::driver('google')->stateless()->redirect();
+        try {
+            return Socialite::driver('google')->stateless()->redirect();
+        } catch (Throwable $exception) {
+            return $this->redirectWithGoogleError($frontendUrl, 'Google login could not start. Check Google OAuth configuration.');
+        }
     }
 
     public function handleGoogleCallback(Request $request)
     {
+        $frontendUrl = $this->frontendUrl();
+
         if (! config('services.google.client_id') || ! config('services.google.client_secret')) {
-            abort(422, 'Google login is not configured.');
+            return $this->redirectWithGoogleError($frontendUrl, 'Google login is not configured.');
         }
 
-        $frontendUrl = rtrim(env('FRONTEND_URL', 'http://127.0.0.1:5174'), '/');
-
         if ($request->has('error')) {
-            return redirect()->away($frontendUrl . '/login?' . http_build_query([
-                'google_error' => $request->query('error_description', $request->query('error')),
-            ]));
+            return $this->redirectWithGoogleError(
+                $frontendUrl,
+                $request->query('error_description', $request->query('error'))
+            );
         }
 
         if (! $request->has('code')) {
-            return redirect()->away($frontendUrl . '/login?' . http_build_query([
-                'google_error' => 'Google did not return an authorization code. Start login from the Continue with Google button.',
-            ]));
+            return $this->redirectWithGoogleError($frontendUrl, 'Google did not return an authorization code. Start login from the Continue with Google button.');
         }
 
         try {
@@ -107,22 +111,24 @@ class AuthController extends Controller
 
             $googleUser = $provider->user();
         } catch (Throwable $exception) {
-            return redirect()->away($frontendUrl . '/login?' . http_build_query([
-                'google_error' => 'Google login failed. Check the redirect URI and try again from the Continue with Google button.',
-            ]));
+            return $this->redirectWithGoogleError($frontendUrl, 'Google login failed. Check the redirect URI and try again from the Continue with Google button.');
         }
 
-        $user = User::firstOrCreate(
-            ['email' => $googleUser->getEmail()],
-            [
-                'name' => $googleUser->getName() ?: $googleUser->getNickname() ?: 'Google User',
-                'password' => Hash::make(Str::random(32)),
-                'phone' => null,
-                'role' => 'user',
-            ]
-        );
+        try {
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName() ?: $googleUser->getNickname() ?: 'Google User',
+                    'password' => Hash::make(Str::random(32)),
+                    'phone' => null,
+                    'role' => 'user',
+                ]
+            );
 
-        $token = $user->createToken('rentspot-google')->plainTextToken;
+            $token = $user->createToken('rentspot-google')->plainTextToken;
+        } catch (Throwable $exception) {
+            return $this->redirectWithGoogleError($frontendUrl, 'Google login completed, but RENTSPOT could not create your session.');
+        }
 
         return redirect()->away($frontendUrl . '/auth/google/callback?' . http_build_query([
             'token' => $token,
@@ -140,5 +146,17 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out successfully.']);
+    }
+
+    private function frontendUrl(): string
+    {
+        return rtrim(env('FRONTEND_URL', 'http://127.0.0.1:5174'), '/');
+    }
+
+    private function redirectWithGoogleError(string $frontendUrl, string $message)
+    {
+        return redirect()->away($frontendUrl . '/login?' . http_build_query([
+            'google_error' => $message,
+        ]));
     }
 }
