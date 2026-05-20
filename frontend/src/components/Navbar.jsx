@@ -1,7 +1,8 @@
-import { Menu, UserRound } from 'lucide-react';
+import { LogOut, Menu, UserRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { logout } from '../features/auth/authSlice';
 import { useLanguage } from '../i18n/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import UserNotifications from './UserNotifications';
@@ -39,6 +40,7 @@ const smoothScrollTo = (sectionId) => {
 };
 
 export default function Navbar() {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -73,6 +75,12 @@ export default function Navbar() {
 
   const sectionLinkClass = 'text-[11px] font-semibold text-slate-700 transition hover:text-primary';
 
+  const signOut = async () => {
+    setOpen(false);
+    await dispatch(logout());
+    navigate('/');
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5">
@@ -92,6 +100,9 @@ export default function Navbar() {
             <>
               <UserNotifications isAdmin={user.role === 'admin'} />
               <Link to={dashboardPath} className="grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-primary"><UserRound size={15} /></Link>
+              <button type="button" onClick={signOut} className="grid h-7 w-7 place-items-center rounded-full bg-red-50 text-red-600 transition hover:bg-red-100" aria-label="Logout">
+                <LogOut size={14} />
+              </button>
             </>
           ) : (
             <>
@@ -113,6 +124,7 @@ export default function Navbar() {
             <button type="button" onClick={() => scrollToSection('about')} className="text-left">{t('nav.about')}</button>
             <button type="button" onClick={() => scrollToSection('contact')} className="text-left">{t('nav.contact')}</button>
             <Link to={user ? dashboardPath : '/login'} onClick={() => setOpen(false)}>{user ? t('nav.dashboard') : t('nav.login')}</Link>
+            {user && <button type="button" onClick={signOut} className="flex items-center gap-2 text-left text-red-600"><LogOut size={16} /> {t('nav.logout')}</button>}
           </div>
         </div>
       )}

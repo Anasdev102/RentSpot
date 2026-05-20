@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import AdminLayout from './components/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -38,9 +38,9 @@ function ScrollManager() {
   return null;
 }
 
-function AppRoutes({ location }) {
+function AppRoutes() {
   return (
-    <Routes location={location}>
+    <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/stadiums" element={<Stadiums />} />
       <Route path="/stadiums/:id" element={<StadiumDetails />} />
@@ -50,6 +50,9 @@ function AppRoutes({ location }) {
 
       <Route element={<ProtectedRoute role="user" />}>
         <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
+
+      <Route element={<ProtectedRoute />}>
         <Route path="/checkout" element={<Checkout />} />
       </Route>
 
@@ -71,29 +74,10 @@ function AppRoutes({ location }) {
 
 function AnimatedRoutes() {
   const location = useLocation();
-  const [displayLocation, setDisplayLocation] = useState(location);
-  const [stage, setStage] = useState('route-enter');
-
-  useEffect(() => {
-    const sameRoute = displayLocation.pathname === location.pathname && displayLocation.search === location.search && displayLocation.hash === location.hash;
-
-    if (sameRoute) {
-      return undefined;
-    }
-
-    setStage('route-exit');
-
-    const timeout = window.setTimeout(() => {
-      setDisplayLocation(location);
-      setStage('route-enter');
-    }, 240);
-
-    return () => window.clearTimeout(timeout);
-  }, [displayLocation, location]);
 
   return (
-    <div className={`route-transition-shell ${stage}`}>
-      <AppRoutes location={displayLocation} />
+    <div key={location.pathname} className="route-transition-shell route-enter">
+      <AppRoutes />
     </div>
   );
 }

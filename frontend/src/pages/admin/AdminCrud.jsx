@@ -87,14 +87,14 @@ export default function AdminCrud({ resource }) {
   }, [form.images]);
 
   const remove = async (id) => {
-    if (!confirm(`Delete ${resource} #${id}?`)) return;
+    if (!confirm(`Delete this ${getSingularTitle(title).toLowerCase()}?`)) return;
     setMessage(null);
     setError(null);
 
     try {
       await api.delete(`/admin/${resource}/${id}`);
       setRows((current) => current.filter((row) => row.id !== id));
-      setMessage(`${getSingularTitle(title)} #${id} deleted.`);
+      setMessage(`${getSingularTitle(title)} deleted.`);
     } catch (requestError) {
       setError(requestError.response?.data?.message || 'Delete failed. This record may be linked to reservations or other data.');
     }

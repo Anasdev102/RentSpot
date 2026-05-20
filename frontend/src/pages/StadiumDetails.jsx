@@ -21,7 +21,7 @@ export default function StadiumDetails() {
   const { current, error } = useSelector((state) => state.reservations);
   const { token } = useSelector((state) => state.auth);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [form, setForm] = useState({ date: '', start_time: '18:00', end_time: '19:00' });
+  const [form, setForm] = useState({ date: '', start_time: '', end_time: '' });
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [initialFetchPending, setInitialFetchPending] = useState(true);
@@ -96,6 +96,7 @@ export default function StadiumDetails() {
   const reserve = async (event) => {
     event.preventDefault();
     if (!token) return navigate('/login');
+    if (!form.date || !form.start_time || !form.end_time) return;
     dispatch(createReservation({ stadium_id: selected.id, ...form }));
   };
 

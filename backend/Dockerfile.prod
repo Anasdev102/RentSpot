@@ -1,0 +1,30 @@
+FROM composer:2 AS vendor
+
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+
+COPY . .
+RUN composer dump-autoload --no-dev --optimize
+
+FROM php:8.2-fpm-alpine
+
+WORKDIR /var/www/html
+
+RUN apk add --no-cache bash icu-libs libzip mysql-client \
+    && apk add --no-cache --virtual .build-deps icu-dev libzip-dev \
+    && docker-php-ext-install pdo_mysql intl zip opcache \
+    && apk del .build-deps
+
+COPY --from=vendor /app /var/www/html
+COPY docker/php.prod.ini /usr/local/etc/php/conf.d/rentspot.ini
+COPY docker/entrypoint.prod.sh /usr/local/bin/rentspot-prod-entrypoint
+
+RUN chmod +x /usr/local/bin/rentspot-prod-entrypoint \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+EXPOSE 9000
+
+ENTRYPOINT ["rentspot-prod-entrypoint"]
+CMD ["php-fpm"]

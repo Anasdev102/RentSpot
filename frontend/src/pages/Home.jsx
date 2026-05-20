@@ -14,7 +14,7 @@ import {
 import api from '../api/axios';
 import { fetchCities, fetchSports, fetchStadiums } from '../features/stadiums/stadiumsSlice';
 
-const supportEmail = 'elidrissianas210@gmail.com';
+const supportEmail = 'elidrissianas@gmail.com';
 
 export default function Home() {
   const dispatch = useDispatch();

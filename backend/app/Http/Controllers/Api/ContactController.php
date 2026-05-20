@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactMessageMail;
 use App\Models\Contact;
 use App\Services\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class ContactController extends Controller
 {
@@ -32,6 +36,15 @@ class ContactController extends Controller
             "{$contact->name} sent a contact message",
             "/admin/contact-messages?highlight={$contact->id}"
         );
+
+        try {
+            Mail::to(config('mail.contact_to'))->send(new ContactMessageMail($contact));
+        } catch (Throwable $exception) {
+            Log::warning('Contact email delivery failed.', [
+                'contact_id' => $contact->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
 
         return response()->json([
             'message' => 'Contact message sent successfully.',

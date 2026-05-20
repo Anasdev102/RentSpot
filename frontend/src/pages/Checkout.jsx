@@ -10,6 +10,7 @@ export default function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { current, loading } = useSelector((state) => state.reservations);
+  const { user } = useSelector((state) => state.auth);
 
   if (!current) {
     return (
@@ -22,7 +23,7 @@ export default function Checkout() {
 
   const pay = async () => {
     await dispatch(payReservation(current.id));
-    navigate('/dashboard');
+    navigate(user?.role === 'admin' ? '/admin' : '/dashboard');
   };
 
   return (

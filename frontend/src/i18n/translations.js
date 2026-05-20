@@ -14,6 +14,7 @@ export const translations = {
       contact: 'Contact',
       dashboard: 'Dashboard',
       login: 'Login',
+      logout: 'Logout',
     },
     home: {
       heroTitlePrefix: 'Reserve Your Sports Field in',
@@ -130,6 +131,7 @@ export const translations = {
       contact: 'Contact',
       dashboard: 'Tableau de bord',
       login: 'Connexion',
+      logout: 'Déconnexion',
     },
     home: {
       heroTitlePrefix: 'Réservez votre terrain de sport en',
@@ -246,6 +248,7 @@ export const translations = {
       contact: 'تواصل معنا',
       dashboard: 'لوحة التحكم',
       login: 'تسجيل الدخول',
+      logout: 'تسجيل الخروج',
     },
     home: {
       heroTitlePrefix: 'احجز ملعبك الرياضي في',

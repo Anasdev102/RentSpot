@@ -1,10 +1,10 @@
 export const crudColumns = {
-  sports: ['id', 'name', 'icon'],
-  stadiums: ['id', 'name', 'city', 'price_per_hour', 'is_active'],
-  reservations: ['id', 'date', 'start_time', 'end_time', 'status'],
-  payments: ['id', 'amount', 'status', 'transaction_id'],
-  users: ['id', 'name', 'email', 'role'],
-  reviews: ['id', 'rating', 'comment'],
+  sports: ['name', 'icon'],
+  stadiums: ['name', 'city', 'price_per_hour', 'is_active'],
+  reservations: ['date', 'start_time', 'end_time', 'status'],
+  payments: ['amount', 'status', 'transaction_id'],
+  users: ['name', 'email', 'role'],
+  reviews: ['rating', 'comment'],
 };
 
 export const crudFields = {

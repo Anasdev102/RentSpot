@@ -96,6 +96,8 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'contact_to' => env('CONTACT_TO_EMAIL', 'elidrissianas@gmail.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings

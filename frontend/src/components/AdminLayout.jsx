@@ -1,7 +1,7 @@
 import { CalendarDays, CreditCard, Dumbbell, Grid2X2, Inbox, LogOut, Menu, MessageSquare, Settings, Trophy, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useLocation, useNavigate, useOutlet } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate, useOutlet } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
 
 const items = [
@@ -34,13 +34,13 @@ export default function AdminLayout() {
     <aside className="flex h-full flex-col border-r border-slate-200/80 bg-white px-4 py-5 text-slate-700 shadow-[10px_0_35px_rgba(15,23,42,0.04)]">
       <div className="shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-3 py-2 shadow-sm">
+          <Link to="/" onClick={() => setSidebarOpen(false)} className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-3 py-2 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md" aria-label="Go to RENTSPOT home">
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-secondary/10 text-lg font-black text-secondary ring-1 ring-secondary/20">R</span>
             <div>
               <h1 className="text-xl font-black tracking-tight text-slate-950">RENTSPOT</h1>
               <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">Admin</p>
             </div>
-          </div>
+          </Link>
           <button type="button" onClick={() => setSidebarOpen(false)} className="grid h-9 w-9 place-items-center rounded-xl text-slate-500 transition-all duration-300 ease-out hover:bg-slate-100 hover:text-slate-900 md:hidden" aria-label="Close sidebar">
             <X size={18} />
           </button>
